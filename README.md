@@ -151,10 +151,6 @@ errores 404 al usar un id que ya no existe):
 
 ![POST exitoso](docs/evidencias/postman-post-exito.png)
 
-![PUT exitoso](docs/evidencias/postman-put-exito.png)
-
-![GET con id inexistente - 404](docs/evidencias/postman-get-404.png)
-
 ![PATCH con id inexistente - 404](docs/evidencias/postman-patch-404.png)
 
 ![DELETE exitoso](docs/evidencias/postman-delete-exito.png)
