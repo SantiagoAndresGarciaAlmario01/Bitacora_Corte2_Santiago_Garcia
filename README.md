@@ -103,7 +103,7 @@ dentro del proyecto.
 
 ### Swagger UI
 
-![Swagger UI](docs/evidencias/swagger-ui.png)
+![Swagger UI](docs/evidencias/swagger--ui.png)
 
 ### Cobertura de pruebas (Jacoco)
 
