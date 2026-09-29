@@ -20,6 +20,14 @@ public class Mesa {
         return estado == EstadoMesa.LIBRE;
     }
 
+    public boolean estaOcupada() {
+        return estado == EstadoMesa.OCUPADA;
+    }
+
+    public boolean alcanzaPara(int personas) {
+        return capacidad != null && capacidad >= personas;
+    }
+
     public void ocupar() {
         this.estado = EstadoMesa.OCUPADA;
     }

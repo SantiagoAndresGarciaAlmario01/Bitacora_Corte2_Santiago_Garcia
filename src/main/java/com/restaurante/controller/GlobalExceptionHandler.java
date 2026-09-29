@@ -5,11 +5,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.restaurante.exception.ConflictoException;
 import com.restaurante.exception.EstadoInvalidoException;
@@ -66,6 +69,29 @@ public class GlobalExceptionHandler {
                                                                   HttpServletRequest request) {
         log.warn("Body invalido o vacio en la peticion: {}", request.getRequestURI());
         return construirRespuesta(HttpStatus.BAD_REQUEST, "El cuerpo de la peticion es invalido o esta vacio", request);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponseDTO> manejarParametroInvalido(MethodArgumentTypeMismatchException ex,
+                                                                     HttpServletRequest request) {
+        String mensaje = "Valor invalido para el parametro '" + ex.getName() + "': " + ex.getValue();
+        log.warn(mensaje);
+        return construirRespuesta(HttpStatus.BAD_REQUEST, mensaje, request);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseDTO> manejarCredencialesInvalidas(AuthenticationException ex,
+                                                                         HttpServletRequest request) {
+        log.warn("Intento de inicio de sesion fallido en {}", request.getRequestURI());
+        return construirRespuesta(HttpStatus.UNAUTHORIZED, "Correo o contrasena incorrectos", request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDTO> manejarIntegridadDatos(DataIntegrityViolationException ex,
+                                                                   HttpServletRequest request) {
+        log.warn("Violacion de integridad en BD: {}", ex.getMostSpecificCause().getMessage());
+        return construirRespuesta(HttpStatus.CONFLICT,
+                "La operacion viola una restriccion de la base de datos (dato duplicado o faltante)", request);
     }
 
     @ExceptionHandler(Exception.class)

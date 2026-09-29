@@ -1,5 +1,6 @@
 package com.restaurante.model.domain;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -24,5 +25,16 @@ public class RegistroVehiculo {
 
     public void registrarSalida() {
         this.horaSalida = LocalDateTime.now();
+    }
+
+    /**
+     * Minutos que el vehiculo lleva (o duro) en el parqueadero.
+     */
+    public long minutosEstacionado() {
+        if (horaEntrada == null) {
+            return 0;
+        }
+        LocalDateTime fin = horaSalida != null ? horaSalida : LocalDateTime.now();
+        return Duration.between(horaEntrada, fin).toMinutes();
     }
 }

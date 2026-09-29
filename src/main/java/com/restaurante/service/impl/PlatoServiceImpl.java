@@ -1,49 +1,51 @@
 package com.restaurante.service.impl;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.restaurante.model.domain.Plato;
+import com.restaurante.persistence.convertidor.ConvertidorEntidad;
+import com.restaurante.persistence.convertidor.PlatoConvertidor;
+import com.restaurante.persistence.entity.PlatoEntity;
+import com.restaurante.persistence.repository.PlatoRepository;
 import com.restaurante.service.IPlatoService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Implementacion de {@link IPlatoService}.
+ * Implementacion de {@link IPlatoService} sobre PostgreSQL.
  *
- * <p>A diferencia de una version anterior que manejaba el {@code Map} y el
- * {@code AtomicLong} directamente en esta clase, aqui el almacenamiento y las
- * operaciones basicas de CRUD viven en {@link AbstractCrudServiceImpl}. Esta
- * clase solo se encarga de:</p>
- * <ul>
- *   <li>decirle a la clase base como identificar y generar ids para un Plato,</li>
- *   <li>traducir las operaciones del dominio (RF de platos) a las operaciones
- *       genericas heredadas (buscarPorId, guardar, filtrar, etc.),</li>
- *   <li>aplicar las reglas propias de Plato que la clase base no conoce
- *       (activar/desactivar disponibilidad, copiar campos al actualizar).</li>
- * </ul>
+ * <p>El contrato publico es el mismo de la Semana 8; lo unico que cambio es
+ * que los datos ahora viven en la tabla {@code platos} y las consultas de
+ * menu (disponibles / por categoria) las resuelve la base de datos con
+ * metodos derivados de Spring Data en vez de filtrar un {@code Map}.</p>
  */
 @Service
 @Slf4j
-public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato> implements IPlatoService {
+@RequiredArgsConstructor
+@Transactional
+public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato, PlatoEntity> implements IPlatoService {
 
-    private final AtomicLong secuenciaId = new AtomicLong(1);
+    private final PlatoRepository platoRepository;
+    private final PlatoConvertidor platoConvertidor;
 
     @Override
-    protected Long obtenerId(Plato entidad) {
-        return entidad.getId();
+    protected JpaRepository<PlatoEntity, Long> repositorio() {
+        return platoRepository;
     }
 
     @Override
-    protected void asignarId(Plato entidad, Long id) {
-        entidad.setId(id);
+    protected ConvertidorEntidad<Plato, PlatoEntity> convertidor() {
+        return platoConvertidor;
     }
 
     @Override
-    protected Long generarSiguienteId() {
-        return secuenciaId.getAndIncrement();
+    protected void asignarId(Plato dominio, Long id) {
+        dominio.setId(id);
     }
 
     @Override
@@ -52,6 +54,7 @@ public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato> implements 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Plato> obtenerTodos() {
         List<Plato> platos = listarTodos();
         log.info("Obteniendo todos los platos. Total: {}", platos.size());
@@ -59,22 +62,28 @@ public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato> implements 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Plato> obtenerDisponibles() {
-        return filtrar(Plato::estaDisponible);
+        return aDominio(platoRepository.findByDisponibleTrue());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Plato> obtenerPorCategoria(String categoria) {
-        return filtrar(p -> p.getCategoria().equalsIgnoreCase(categoria));
+        return aDominio(platoRepository.findByCategoriaIgnoreCase(categoria));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Plato obtenerPorId(Long id) {
         return buscarPorId(id);
     }
 
     @Override
     public Plato crear(Plato plato) {
+        if (plato.getDisponible() == null) {
+            plato.activar();
+        }
         return guardar(plato);
     }
 
@@ -88,7 +97,7 @@ public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato> implements 
         existente.setDescripcion(nuevosDatos.getDescripcion());
 
         log.info("Plato actualizado: id={}", id);
-        return existente;
+        return reemplazar(id, existente);
     }
 
     @Override
@@ -100,7 +109,7 @@ public class PlatoServiceImpl extends AbstractCrudServiceImpl<Plato> implements 
             plato.desactivar();
         }
         log.info("Plato id={} -> disponible={}", id, disponible);
-        return plato;
+        return reemplazar(id, plato);
     }
 
     @Override

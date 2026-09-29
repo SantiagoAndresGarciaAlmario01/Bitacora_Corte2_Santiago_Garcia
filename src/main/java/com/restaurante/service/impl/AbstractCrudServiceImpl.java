@@ -1,98 +1,92 @@
 package com.restaurante.service.impl;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.restaurante.exception.RecursoNoEncontradoException;
+import com.restaurante.persistence.convertidor.ConvertidorEntidad;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Base generica para servicios que necesitan un CRUD en memoria mientras el
- * proyecto no tiene persistencia real (ver README: "Estado actual: sin
- * persistencia").
+ * Base generica para los servicios CRUD del restaurante.
  *
- * <p>Centraliza aqui el almacenamiento (Map), la generacion de ids y las
- * operaciones basicas (listar, buscar, guardar, reemplazar, eliminar,
- * filtrar) para que cada servicio concreto (por ejemplo {@code PlatoServiceImpl})
- * solo tenga que resolver el "como" de su propio dominio: como se obtiene el
- * id de la entidad, como se le asigna un id nuevo y como se llama el recurso
- * para los mensajes de error.</p>
+ * <p>En la version de la Semana 8 esta clase guardaba todo en un {@code Map}
+ * en memoria. Ahora el almacenamiento real es PostgreSQL: la clase recibe el
+ * repositorio JPA de la entidad y un {@link ConvertidorEntidad} para pasar de
+ * entidad a dominio y viceversa. Las operaciones que ofrece a las subclases
+ * (listar, buscar, guardar, reemplazar, eliminar) son las mismas de antes, asi
+ * que cada servicio concreto sigue concentrado solo en sus reglas de negocio.</p>
  *
- * @param <T> tipo de la entidad de dominio administrada (ej. Plato)
+ * @param <D> clase de dominio (ej. Plato)
+ * @param <E> entidad JPA correspondiente (ej. PlatoEntity)
  */
 @Slf4j
-public abstract class AbstractCrudServiceImpl<T> {
+public abstract class AbstractCrudServiceImpl<D, E> {
 
-    private final Map<Long, T> almacen = new ConcurrentHashMap<>();
+    /** Repositorio JPA de la entidad. */
+    protected abstract JpaRepository<E, Long> repositorio();
 
-    /**
-     * Extrae el id actual de la entidad (puede ser null si aun no se ha guardado).
-     */
-    protected abstract Long obtenerId(T entidad);
+    /** Convertidor entre la entidad JPA y el dominio. */
+    protected abstract ConvertidorEntidad<D, E> convertidor();
 
-    /**
-     * Asigna un id ya generado a la entidad.
-     */
-    protected abstract void asignarId(T entidad, Long id);
+    /** Asigna el id a un objeto de dominio (se usa al reemplazar). */
+    protected abstract void asignarId(D dominio, Long id);
 
-    /**
-     * Calcula el siguiente id disponible para una entidad nueva.
-     */
-    protected abstract Long generarSiguienteId();
-
-    /**
-     * Nombre legible del recurso, usado en los mensajes de
-     * {@link RecursoNoEncontradoException} (ej. "Plato").
-     */
+    /** Nombre legible del recurso para mensajes de error (ej. "Plato"). */
     protected abstract String nombreRecurso();
 
-    protected List<T> listarTodos() {
-        return List.copyOf(almacen.values());
+    protected List<D> listarTodos() {
+        return convertidor().aDominioLista(repositorio().findAll());
     }
 
-    protected List<T> filtrar(Predicate<T> criterio) {
-        return almacen.values().stream()
-                .filter(criterio)
-                .toList();
+    protected List<D> aDominio(List<E> entidades) {
+        return convertidor().aDominioLista(entidades);
     }
 
-    protected T buscarPorId(Long id) {
-        return Optional.ofNullable(almacen.get(id))
+    protected E buscarEntidad(Long id) {
+        return repositorio().findById(id)
                 .orElseThrow(() -> {
                     log.warn("{} no encontrado: id={}", nombreRecurso(), id);
                     return new RecursoNoEncontradoException(nombreRecurso(), id);
                 });
     }
 
+    protected D buscarPorId(Long id) {
+        return convertidor().aDominio(buscarEntidad(id));
+    }
+
     protected boolean existe(Long id) {
-        return almacen.containsKey(id);
+        return repositorio().existsById(id);
     }
 
-    protected T guardar(T entidad) {
-        Long id = generarSiguienteId();
-        asignarId(entidad, id);
-        almacen.put(id, entidad);
-        log.info("{} guardado: id={}", nombreRecurso(), id);
-        return entidad;
+    /** Inserta un objeto nuevo (se ignora cualquier id que traiga). */
+    protected D guardar(D dominio) {
+        asignarId(dominio, null);
+        E guardada = repositorio().save(convertidor().aEntidad(dominio));
+        D resultado = convertidor().aDominio(guardada);
+        log.info("{} guardado en BD", nombreRecurso());
+        return resultado;
     }
 
-    protected T reemplazar(Long id, T entidad) {
-        buscarPorId(id);
-        if (!id.equals(obtenerId(entidad))) {
-            asignarId(entidad, id);
+    /** Actualiza un objeto que ya existe (404 si no existe). */
+    protected D reemplazar(Long id, D dominio) {
+        if (!existe(id)) {
+            throw new RecursoNoEncontradoException(nombreRecurso(), id);
         }
-        almacen.put(id, entidad);
-        log.info("{} reemplazado: id={}", nombreRecurso(), id);
-        return entidad;
+        asignarId(dominio, id);
+        E guardada = repositorio().save(convertidor().aEntidad(dominio));
+        log.info("{} actualizado en BD: id={}", nombreRecurso(), id);
+        return convertidor().aDominio(guardada);
     }
 
     protected void eliminarPorId(Long id) {
-        buscarPorId(id);
-        almacen.remove(id);
-        log.info("{} eliminado: id={}", nombreRecurso(), id);
+        if (!existe(id)) {
+            log.warn("{} no encontrado para eliminar: id={}", nombreRecurso(), id);
+            throw new RecursoNoEncontradoException(nombreRecurso(), id);
+        }
+        repositorio().deleteById(id);
+        log.info("{} eliminado de BD: id={}", nombreRecurso(), id);
     }
 }

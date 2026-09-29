@@ -1,0 +1,28 @@
+# Bases de datos para correr la API en local.
+#   docker compose up -d      -> levanta PostgreSQL y MongoDB
+#   docker compose down       -> las detiene (los datos quedan en los volumenes)
+# Se usan los puertos 5433 y 27018 para no chocar con instalaciones locales.
+services:
+  postgres:
+    image: postgres:16
+    container_name: sushicraft-postgres
+    environment:
+      POSTGRES_DB: sushicraft_db
+      POSTGRES_USER: sushicraft
+      POSTGRES_PASSWORD: sushicraft123
+    ports:
+      - "5433:5432"
+    volumes:
+      - sushicraft-pg-data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:7
+    container_name: sushicraft-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - sushicraft-mongo-data:/data/db
+
+volumes:
+  sushicraft-pg-data:
+  sushicraft-mongo-data:

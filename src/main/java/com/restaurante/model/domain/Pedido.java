@@ -1,5 +1,6 @@
 package com.restaurante.model.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +17,11 @@ public class Pedido {
 
     private Long id;
     private Long idMesa;
+    private Long idCuenta;
     @Builder.Default
     private List<ItemPedido> items = new ArrayList<>();
     private EstadoPedido estado;
+    private LocalDateTime fechaCreacion;
 
     public void agregarItem(ItemPedido item) {
         if (items == null) {
@@ -36,5 +39,13 @@ public class Pedido {
 
     public boolean puedeModificarse() {
         return estado == EstadoPedido.RECIBIDO || estado == EstadoPedido.EN_PREPARACION;
+    }
+
+    public boolean estaCerrado() {
+        return estado != null && estado.esFinal();
+    }
+
+    public boolean cuentaParaCobro() {
+        return estado == EstadoPedido.ENTREGADO;
     }
 }

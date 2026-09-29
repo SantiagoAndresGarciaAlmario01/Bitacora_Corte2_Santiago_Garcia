@@ -1,5 +1,6 @@
 package com.restaurante.model.domain;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -30,5 +31,17 @@ public class Reserva {
 
     public void reprogramar(LocalDateTime nuevaFechaHora) {
         this.fechaHora = nuevaFechaHora;
+    }
+
+    /**
+     * Dos reservas de la misma mesa chocan si sus horas estan a menos de
+     * {@code margenHoras} horas de distancia (tiempo promedio de una comida).
+     */
+    public boolean chocaCon(LocalDateTime otraFechaHora, int margenHoras) {
+        if (fechaHora == null || otraFechaHora == null) {
+            return false;
+        }
+        long minutos = Math.abs(Duration.between(fechaHora, otraFechaHora).toMinutes());
+        return minutos < margenHoras * 60L;
     }
 }
