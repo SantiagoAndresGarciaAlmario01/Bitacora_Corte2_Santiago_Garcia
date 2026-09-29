@@ -1,6 +1,7 @@
 # Bitacora DOSW - Corte 2 - Sushi Craft
 
 **Autor:** Santiago Andres Garcia Almario
+
 **Correo:** santiago.garcia-a@mail.escuelaing.edu.co
 
 ## Descripcion
