@@ -86,7 +86,7 @@ jobs:
     if: github.event_name == 'push'
     environment:
       name: qa
-      url: https://sushicraft-santiago-qa-2026-a0cgheh5pf0bwck.eastus2-01.azurewebsites.net
+      url: https://sushicraft-santiago-qa-2026-a0cgheh5hpf0bwck.eastus2-01.azurewebsites.net/
     steps:
       - name: Deploy del contenedor a QA
         uses: azure/webapps-deploy@v3
