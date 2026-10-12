@@ -441,7 +441,7 @@ Pipeline completo en verde, con la aprobacion manual del deploy a PROD:
 
 Swagger de QA corriendo en Azure, conectado a su Postgres y Mongo reales:
 
-![Swagger QA en la nube](docs/evidencias/swagger-qa-nube.png)
+<img width="932" height="957" alt="image" src="https://github.com/user-attachments/assets/2853041a-fd1a-4ac8-9670-c557d19c63ff" />
 
 Swagger de PROD corriendo en Azure, conectado a su Postgres y Mongo
 reales (separados de los de QA):
