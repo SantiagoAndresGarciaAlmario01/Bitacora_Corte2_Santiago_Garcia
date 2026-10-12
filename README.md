@@ -459,13 +459,13 @@ Imagen publicada en Docker Hub con sus tags (hash del commit y `latest`):
 
 Los 8 grupos de endpoints (Platos, Menu, Mesas, Pedidos, Items de pedido, Cuentas, Reservas, Parqueadero):
 
-![Swagger UI 1](docs/evidencias/swagger-ui-1.png)
+<img width="1916" height="997" alt="image" src="https://github.com/user-attachments/assets/dc318df3-0ab8-45cf-9ac3-cff2c52e1e51" />
 
-![Swagger UI 2](docs/evidencias/swagger-ui-2.png)
+<img width="1513" height="798" alt="image" src="https://github.com/user-attachments/assets/17450ae6-7543-4359-8ef7-66284f0dfbb3" />
 
-![Swagger UI 3](docs/evidencias/swagger-ui-3.png)
+<img width="1466" height="861" alt="image" src="https://github.com/user-attachments/assets/11137ff2-9908-4b61-ac27-bd1783faa501" />
 
-![Swagger UI 4](docs/evidencias/swagger-ui-4.png)
+<img width="1916" height="1001" alt="image" src="https://github.com/user-attachments/assets/0755d64d-accf-4448-978d-cd12232d8dc1" />
 
 ### Cobertura de pruebas (Jacoco)
 
