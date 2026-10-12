@@ -102,7 +102,6 @@ jobs:
     if: ${{ false }}
     environment:
       name: production
-      url: production
 
     steps:
       - name: Deploy del contenedor a PROD
