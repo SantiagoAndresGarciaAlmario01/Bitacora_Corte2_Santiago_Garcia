@@ -1,0 +1,21 @@
+target/
+*.class
+
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+bin/
+
+.DS_Store
+Thumbs.db
+
+*.log
+
+# Docker (Semana 10)
+.env
+_stage_tmp/
