@@ -99,10 +99,10 @@ jobs:
     name: Deploy a Azure App Service - PROD (requiere aprobacion manual)
     needs: deploy-qa
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: ${{ false }}
     environment:
       name: production
-      url: https://sushicraft-santiago-qa-2026-a0cgheh5pf0bwck.eastus2-01.azurewebsites.net
+      url: production
 
     steps:
       - name: Deploy del contenedor a PROD
