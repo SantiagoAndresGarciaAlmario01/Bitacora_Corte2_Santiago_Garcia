@@ -99,14 +99,15 @@ jobs:
     name: Deploy a Azure App Service - PROD (requiere aprobacion manual)
     needs: deploy-qa
     runs-on: ubuntu-latest
-    if: ${{ false }}
+    if: github.event_name == 'push'
     environment:
       name: production
+      url: https://sushicraft-santiago-prod-2026-abeuescabpa3h6cz.eastus2-01.azurewebsites.net
 
     steps:
       - name: Deploy del contenedor a PROD
         uses: azure/webapps-deploy@v3
         with:
-          app-name: sushicraft-santiago-qa-2026
+          app-name: sushicraft-santiago-prod-2026
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
           images: docker.io/${{ env.DOCKERHUB_IMAGE }}:${{ github.sha }}
