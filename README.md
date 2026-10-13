@@ -488,7 +488,7 @@ controladores en vez de poner cada `@ApiResponse` por separado, que es
 lo que pide la regla desde Java 8. Se corrigieron los dos y quedo en 0
 issues.
 
-![SonarQube antes](docs/evidencias/sonar-overview-antes.png)
+<img width="1914" height="993" alt="image" src="https://github.com/user-attachments/assets/7b24d6e5-0ed8-4510-8c86-6f35fdc2f4c7" />
 
 ![Issues antes](docs/evidencias/sonar-issues-antes.png)
 
