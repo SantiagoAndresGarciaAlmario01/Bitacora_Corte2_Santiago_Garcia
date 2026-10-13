@@ -560,15 +560,14 @@ caso exitoso y un caso de error:
 Capturas representativas (creacion, actualizacion, eliminacion y los
 errores 404 al usar un id que ya no existe):
 
-![POST exitoso](docs/evidencias/postman-post-exito.png)
+<img width="1292" height="798" alt="postman-post-exito" src="https://github.com/user-attachments/assets/3595effe-2770-42e4-8cde-e5c2ad037199" />
 
-![PUT exitoso](docs/evidencias/postman-put-exito.png)
 
-![GET con id inexistente - 404](docs/evidencias/postman-get-404.png)
+<img width="1291" height="802" alt="postman-patch-404" src="https://github.com/user-attachments/assets/197ea9b3-3f50-4e85-bd21-cf3ffe8f9f1c" />
 
-![PATCH con id inexistente - 404](docs/evidencias/postman-patch-404.png)
 
-![DELETE exitoso](docs/evidencias/postman-delete-exito.png)
+<img width="1291" height="805" alt="postman-delete-exito" src="https://github.com/user-attachments/assets/93458892-b032-4331-b6c4-4908d35b3f8c" />
+
 
 ### CI/CD y despliegue en la nube (Semana 10)
 
