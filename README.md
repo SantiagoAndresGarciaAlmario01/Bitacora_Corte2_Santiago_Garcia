@@ -437,7 +437,7 @@ separadas entre QA y PROD.
 
 Pipeline completo en verde, con la aprobacion manual del deploy a PROD:
 
-![Pipeline CI/CD](docs/evidencias/pipeline-cicd-verde-aprobado.png)
+<img width="1905" height="596" alt="image" src="https://github.com/user-attachments/assets/1865b355-cd99-4f33-b345-bab92d56900c" />
 
 Swagger de QA corriendo en Azure, conectado a su Postgres y Mongo reales:
 
@@ -446,11 +446,13 @@ Swagger de QA corriendo en Azure, conectado a su Postgres y Mongo reales:
 Swagger de PROD corriendo en Azure, conectado a su Postgres y Mongo
 reales (separados de los de QA):
 
-![Swagger PROD en la nube](docs/evidencias/swagger-prod-nube.png)
+<img width="949" height="959" alt="image" src="https://github.com/user-attachments/assets/f56ff76d-4ebf-430d-a25e-4635a99c1740" />
+
 
 Imagen publicada en Docker Hub con sus tags (hash del commit y `latest`):
 
-![Tags en Docker Hub](docs/evidencias/dockerhub-tags.png)
+<img width="1912" height="950" alt="image" src="https://github.com/user-attachments/assets/a445f533-945d-426d-8abe-cede456c7d2d" />
+
 
 ## Evidencias
 
@@ -469,7 +471,7 @@ Los 8 grupos de endpoints (Platos, Menu, Mesas, Pedidos, Items de pedido, Cuenta
 
 ### Cobertura de pruebas (Jacoco)
 
-![Cobertura Jacoco](docs/evidencias/jacoco-cobertura.png)
+<img width="1918" height="376" alt="image" src="https://github.com/user-attachments/assets/5b53b4e6-0e1b-435c-bd04-cd4988687f9f" />
 
 Cobertura total: 66% de instrucciones y 50% de ramas. La mayor parte esta
 en `service.impl` (99%) y `mapper` (93%), que es donde estan los 95 tests
@@ -496,7 +498,8 @@ issues.
 
 ### Ejecucion
 
-![Ejecucion de la app](docs/evidencias/ejecucion-consola.png)
+<img width="1201" height="546" alt="image" src="https://github.com/user-attachments/assets/9e725b09-916b-4436-aff7-c2752d64ae79" />
+
 
 ### Autenticacion, roles y persistencia (Semana 9)
 
@@ -578,17 +581,19 @@ por ambiente, separadas entre QA y PROD.
 
 Pipeline completo en verde, con la aprobacion manual del deploy a PROD:
 
-![Pipeline CI/CD](docs/evidencias/pipeline-cicd-verde-aprobado.png)
+<img width="1905" height="596" alt="image" src="https://github.com/user-attachments/assets/1865b355-cd99-4f33-b345-bab92d56900c" />
 
 Swagger de QA corriendo en Azure, conectado a su Postgres y Mongo reales:
 
-![Swagger QA en la nube](docs/evidencias/swagger-qa-nube.png)
+<img width="932" height="957" alt="image" src="https://github.com/user-attachments/assets/2853041a-fd1a-4ac8-9670-c557d19c63ff" />
 
 Swagger de PROD corriendo en Azure, conectado a su Postgres y Mongo
 reales (separados de los de QA):
 
-![Swagger PROD en la nube](docs/evidencias/swagger-prod-nube.png)
+<img width="949" height="959" alt="image" src="https://github.com/user-attachments/assets/f56ff76d-4ebf-430d-a25e-4635a99c1740" />
+
 
 Imagen publicada en Docker Hub con sus tags (hash del commit y `latest`):
 
-![Tags en Docker Hub](docs/evidencias/dockerhub-tags.png)
+<img width="1912" height="950" alt="image" src="https://github.com/user-attachments/assets/a445f533-945d-426d-8abe-cede456c7d2d" />
+
